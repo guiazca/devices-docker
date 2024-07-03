@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { Category } from './types';
-
-const api = axios.create({
-  baseURL: 'https://localhost:7131/api', // Atualize a URL base para o seu backend
-});
+import { api } from '../../apiContants';
 
 // Funções para Categorias
 export const fetchCategories = async () => {

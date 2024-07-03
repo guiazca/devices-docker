@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { Brand } from './types';
-
-const api = axios.create({
-  baseURL: 'https://localhost:7131/api', // Atualize a URL base para o seu back-end
-});
+import { api } from '../../apiContants';
 
 // Funções para Marcas
 export const fetchBrands = async () => {

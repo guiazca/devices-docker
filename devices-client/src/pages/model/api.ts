@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { Model } from './types';
+import { api } from '../../apiContants';
 
-const api = axios.create({
-  baseURL: 'https://localhost:7131/api', // Atualize a URL base para o seu backend
-});
 
 // Funções para Modelos
 export const fetchModels = async () => {

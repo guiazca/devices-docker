@@ -12,6 +12,8 @@ RUN yarn install
 # Mostrar dependências instaladas
 RUN yarn list
 # Executar o build
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
 RUN yarn build
 
 # Verificar o conteúdo do diretório de build
