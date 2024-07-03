@@ -9,21 +9,21 @@ RUN npm run build
 
 # Etapa 2: Construir o backend
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-backend
-WORKDIR /app
+WORKDIR /src
 # Clonar o repositório do backend
 RUN git clone https://github.com/guiazca/DevicesApi.git .
-WORKDIR /app/DevicesApi
-# Mostrar o conteúdo do diretório para verificar se os arquivos estão presentes
-RUN ls -la
-# Restaurar dependências com logs detalhados
+WORKDIR /src/DevicesApi
+# Copiar o arquivo csproj e restaurar dependências
+COPY *.csproj .
 RUN dotnet restore --verbosity diagnostic
-# Publicar o projeto
-RUN dotnet publish -c Release -o out
+# Copiar todo o código e publicar a aplicação
+COPY . .
+RUN dotnet publish -c Release -o /app --no-restore
 
 # Etapa 3: Executar a aplicação
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=build-backend /app/DevicesApi/out .
+COPY --from=build-backend /app .
 COPY --from=build-frontend /app/build ./wwwroot
 
 # Configuração de ambiente
