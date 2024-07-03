@@ -17,7 +17,7 @@ export const createSoftware = async (software: Software) => {
 };
 
 export const updateSoftware = async (software: Software) => {
-  await api.put(`/Softwares/${id}`, software);
+  await api.put(`/Softwares/${software.id}`, software);
 };
 
 export const deleteSoftware = async (id: number) => {
