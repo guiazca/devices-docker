@@ -1,18 +1,6 @@
 version: '3.8'
 
 services:
-  devicesapi:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=devicesdb;Username=postgres;Password=postgres
-    depends_on:
-      - db
-
   db:
     image: postgres
     environment:
@@ -21,3 +9,24 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+
+  devicesapi:
+    build:
+      context: ./DevicesApi
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=devicesdb;Username=postgres;Password=postgres
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./devices-client
+    ports:
+      - "80:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api
+    depends_on:
+      - devicesapi
