@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5433:5432"
+      - "5433:5432"  # Porta do host para 5433
 
   devicesapi:
     build:
@@ -25,7 +25,7 @@ services:
     build:
       context: ./devices-client
     ports:
-      - "8080:80"
+      - "8080:80"  # Alterar a porta do host para 8080
     environment:
       - REACT_APP_API_URL=http://devicesapi:5000/api
     depends_on:
