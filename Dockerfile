@@ -15,12 +15,10 @@ RUN git clone https://github.com/guiazca/DevicesApi.git .
 WORKDIR /app/DevicesApi
 # Mostrar o conteúdo do diretório para verificar se os arquivos estão presentes
 RUN ls -la
-# Mostrar o conteúdo do arquivo .csproj ou .sln
-RUN cat *.csproj || cat *.sln
 # Restaurar dependências com logs detalhados
-RUN dotnet restore --verbosity detailed
+RUN dotnet restore DevicesApi.csproj --verbosity detailed
 # Publicar o projeto
-RUN dotnet publish -c Release -o out
+RUN dotnet publish DevicesApi.csproj -c Release -o out
 
 # Etapa 3: Executar a aplicação
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
