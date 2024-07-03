@@ -88,7 +88,8 @@ const DevicesPage: React.FC = () => {
     }
   };
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    console.log(event)
     setPage(newPage + 1);
   };
 
