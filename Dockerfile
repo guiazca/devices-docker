@@ -11,7 +11,7 @@ RUN npm run build
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-backend
 WORKDIR /app
 # Clonar o repositório do backend
-RUN git clone hhttps://github.com/guiazca/DevicesApi.git .
+RUN git clone https://github.com/guiazca/DevicesApi.git .
 WORKDIR /app/DevicesApi
 # Mostrar o conteúdo do diretório para verificar se os arquivos estão presentes
 RUN ls -la
