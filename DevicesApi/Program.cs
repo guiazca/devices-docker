@@ -43,7 +43,7 @@ builder.Services.AddScoped<PingService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
@@ -66,10 +66,12 @@ app.UseHangfireDashboard();
 app.MapHangfireDashboard();
 
 app.MapControllers();
+
 // Agendamento do job de ping
 var serviceProvider = app.Services;
 RecurringJob.AddOrUpdate(
     "PingDevices",
     () => PingJob.Execute(serviceProvider),
     "0 2 * * 0"); // Às 2:00 da manhã todos os domingos
-    app.Run();
+
+app.Run();
