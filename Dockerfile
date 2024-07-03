@@ -15,8 +15,10 @@ RUN git clone https://github.com/guiazca/DevicesApi.git .
 WORKDIR /app/DevicesApi
 # Mostrar o conteúdo do diretório para verificar se os arquivos estão presentes
 RUN ls -la
-# Restaurar dependências
-RUN dotnet restore
+# Mostrar o conteúdo do arquivo .csproj ou .sln
+RUN cat *.csproj || cat *.sln
+# Restaurar dependências com logs detalhados
+RUN dotnet restore --verbosity detailed
 # Publicar o projeto
 RUN dotnet publish -c Release -o out
 
