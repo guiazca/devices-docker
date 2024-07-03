@@ -1,8 +1,10 @@
 # Etapa 1: Construir o frontend
-FROM node:16 AS build-frontend
+FROM node:18 AS build-frontend
 WORKDIR /app
 # Clonar o repositório e copiar o conteúdo
 COPY . .
+# Remover package-lock.json para evitar conflitos de gerenciadores de pacotes
+RUN rm -f package-lock.json
 # Mostrar o conteúdo do diretório para verificar se os arquivos estão presentes
 RUN ls -la
 # Instalar dependências e construir o frontend
