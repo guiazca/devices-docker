@@ -1,9 +1,16 @@
 # Etapa 1: Construir o frontend
 FROM node:16 AS build-frontend
 WORKDIR /app
+# Clonar o repositório e copiar o conteúdo
 COPY . .
-RUN npm install
-RUN npm run build
+# Mostrar o conteúdo do diretório para verificar se os arquivos estão presentes
+RUN ls -la
+# Instalar dependências e construir o frontend
+RUN yarn install
+# Mostrar dependências instaladas
+RUN yarn list
+# Executar o build
+RUN yarn build
 
 # Etapa 2: Servir a aplicação
 FROM nginx:alpine
