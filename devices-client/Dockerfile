@@ -1,7 +1,7 @@
 # Etapa 1: Construir o frontend
 FROM node:18 AS build-frontend
 WORKDIR /app
-# Clonar o repositório e copiar o conteúdo
+# Copiar o conteúdo
 COPY . .
 # Remover package-lock.json para evitar conflitos de gerenciadores de pacotes
 RUN rm -f package-lock.json
@@ -14,8 +14,12 @@ RUN yarn list
 # Executar o build
 RUN yarn build
 
+# Verificar o conteúdo do diretório de build
+RUN ls -la dist
+
 # Etapa 2: Servir a aplicação
 FROM nginx:alpine
-COPY --from=build-frontend /app/build /usr/share/nginx/html
+# Copiar os arquivos de build para o diretório do NGINX
+COPY --from=build-frontend /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
