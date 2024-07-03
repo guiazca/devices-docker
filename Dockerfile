@@ -16,9 +16,9 @@ WORKDIR /app/DevicesApi
 # Mostrar o conteúdo do diretório para verificar se os arquivos estão presentes
 RUN ls -la
 # Restaurar dependências com logs detalhados
-RUN dotnet restore DevicesApi.csproj --verbosity detailed
+RUN dotnet restore --verbosity detailed
 # Publicar o projeto
-RUN dotnet publish DevicesApi.csproj -c Release -o out
+RUN dotnet publish -c Release -o out
 
 # Etapa 3: Executar a aplicação
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
