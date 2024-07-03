@@ -15,8 +15,6 @@ RUN git clone https://github.com/guiazca/DevicesApi.git .
 WORKDIR /app/DevicesApi
 # Mostrar o conteúdo do diretório para verificar se os arquivos estão presentes
 RUN ls -la
-# Mostrar o conteúdo do arquivo .csproj para garantir que está presente
-RUN cat DevicesApi.csproj
 # Restaurar dependências com logs detalhados
 RUN dotnet restore --verbosity diagnostic
 # Publicar o projeto
