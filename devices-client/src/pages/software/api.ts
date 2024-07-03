@@ -16,7 +16,7 @@ export const createSoftware = async (software: Software) => {
   return response.data;
 };
 
-export const updateSoftware = async (id: number, software: Software) => {
+export const updateSoftware = async (software: Software) => {
   await api.put(`/Softwares/${id}`, software);
 };
 
