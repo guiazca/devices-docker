@@ -21,7 +21,7 @@ const ImportCsv = () => {
     formData.append('file', file);
 
     try {
-      await axios.post('https://localhost:7131/api/Dispositivos/import', formData, {
+      await axios.post('http://localhost:5000/api/Dispositivos/import', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

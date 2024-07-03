@@ -1,8 +1,6 @@
 import axios from 'axios';
+import { api } from '../apiContants';
 
-const api = axios.create({
-  baseURL: 'https://localhost:7131/api', // Atualize a URL base para o seu back-end
-});
 
 export const fetchDevices = async () => {
   const response = await api.get('/Dispositivos');
