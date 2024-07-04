@@ -7,11 +7,14 @@ using System.Globalization;
 using System.Text;
 using CsvHelper.Configuration;
 using CsvHelper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevicesApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    
     public class DispositivosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -22,8 +25,8 @@ namespace DevicesApi.Controllers
         }
 
        [HttpGet]
-public async Task<ActionResult<IEnumerable<DispositivoDto>>> GetDispositivos(int page = 1, int pageSize = 10, int? marcaId = null, int? localizacaoId = null, int? categoriaId = null)
-{
+    public async Task<ActionResult<IEnumerable<DispositivoDto>>> GetDispositivos(int page = 1, int pageSize = 10, int? marcaId = null, int? localizacaoId = null, int? categoriaId = null)
+    {
     var query = _context.Dispositivos
         .Include(d => d.Modelo)
         .ThenInclude(m => m.Marca)

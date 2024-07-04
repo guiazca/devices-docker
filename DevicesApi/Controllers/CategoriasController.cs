@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DevicesApi.Data;
 using DevicesApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevicesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

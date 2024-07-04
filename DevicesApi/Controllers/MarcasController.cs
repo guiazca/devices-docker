@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using DevicesApi.Data;
 using DevicesApi.DTOs;
 using DevicesApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DevicesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MarcasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
