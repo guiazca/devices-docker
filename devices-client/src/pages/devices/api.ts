@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Device } from './types';
 import { api } from '../../apiContants';
 

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Software } from './types';
 import { api } from '../../apiContants';
 

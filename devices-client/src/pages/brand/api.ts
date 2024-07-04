@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { Brand } from './types';
 import { api } from '../../apiContants';
 

@@ -112,7 +112,7 @@ const DevicesPage: React.FC = () => {
 
   const exportData = async () => {
     try {
-      const response = await fetch('https://localhost:7131/api/Dispositivos/export');
+      const response = await fetch('https://localhost:/api/Dispositivos/export');
       const blob = await response.blob();
       saveAs(blob, `dispositivos_${new Date().toISOString()}.csv`);
     } catch (error) {
