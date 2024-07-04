@@ -8,7 +8,6 @@ namespace DevicesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class CategoriasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

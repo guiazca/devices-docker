@@ -9,7 +9,6 @@ namespace DevicesApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class MarcasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

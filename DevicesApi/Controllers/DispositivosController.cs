@@ -13,7 +13,6 @@ namespace DevicesApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     
     public class DispositivosController : ControllerBase
     {
