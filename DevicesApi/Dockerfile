@@ -6,6 +6,12 @@ WORKDIR /app
 COPY *.csproj ./
 RUN dotnet restore
 
+# Instale a ferramenta dotnet-ef
+RUN dotnet tool install --global dotnet-ef
+
+# Adicione a pasta de ferramentas global ao PATH
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
 # Copie o restante dos arquivos e compile o projeto
 COPY . ./
 RUN dotnet publish -c Release -o out
