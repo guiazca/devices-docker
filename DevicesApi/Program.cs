@@ -61,6 +61,17 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     });
 }
 
+// Método para aplicar migrações
+void ApplyMigrations(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        dbContext.Database.Migrate();
+    }
+}
+
+
 void Configure(WebApplication app, IWebHostEnvironment env)
 {
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
