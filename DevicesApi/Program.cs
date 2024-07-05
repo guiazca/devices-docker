@@ -80,8 +80,6 @@ void Configure(WebApplication app, IWebHostEnvironment env)
     app.UseRouting();
     app.UseHttpsRedirection();
     app.UseCors("AllowAllOrigins");
-    // Removido app.UseAuthentication(); // Remover autenticação
-    // Removido app.UseAuthorization(); // Remover autorização
     app.UseHangfireDashboard();
     app.MapHangfireDashboard();
     app.MapControllers();
