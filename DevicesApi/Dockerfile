@@ -1,15 +1,29 @@
-# Etapa 1: Construir o backend
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-backend
-WORKDIR /src
-COPY . .
-RUN dotnet restore --verbosity diagnostic
-RUN dotnet publish -c Release -o /app --no-restore
+# Etapa 1: Build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
 
-# Etapa 2: Executar a aplicação
+# Copie os arquivos do projeto e restaure as dependências
+COPY *.csproj ./
+RUN dotnet restore
+
+# Instale as ferramentas do Entity Framework Core
+RUN dotnet tool install --global dotnet-ef
+
+# Adicione a pasta de ferramentas global ao PATH
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Copie o restante dos arquivos e compile o projeto
+COPY . ./
+RUN dotnet publish -c Release -o out
+
+# Etapa 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=build-backend /app .
-ENV ASPNETCORE_URLS=http://+:5000
-ENV ASPNETCORE_ENVIRONMENT=Production
-EXPOSE 5000
-ENTRYPOINT ["dotnet", "DevicesApi.dll"]
+COPY --from=build /app/out .
+
+# Adicione a pasta de ferramentas global ao PATH no runtime
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Execute as migrações e inicie o aplicativo
+ENTRYPOINT ["sh", "-c", "dotnet ef database update && dotnet DevicesApi.dll"]
+
