@@ -20,7 +20,6 @@ services:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=devicesdb;Username=postgres;Password=postgres
     depends_on:
       - db
-    entrypoint: ["sh", "-c", "dotnet ef database update && dotnet DevicesApi.dll"]
 
   frontend:
     build:

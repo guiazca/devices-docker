@@ -6,12 +6,6 @@ WORKDIR /app
 COPY *.csproj ./
 RUN dotnet restore
 
-# Instale as ferramentas do Entity Framework Core
-RUN dotnet tool install --global dotnet-ef
-
-# Adicione a pasta de ferramentas global ao PATH
-ENV PATH="$PATH:/root/.dotnet/tools"
-
 # Copie o restante dos arquivos e compile o projeto
 COPY . ./
 RUN dotnet publish -c Release -o out
@@ -21,9 +15,11 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
 
-# Adicione a pasta de ferramentas global ao PATH no runtime
-ENV PATH="$PATH:/root/.dotnet/tools"
+# Copie o script de entrada
+COPY entrypoint.sh .
 
-# Execute as migrações e inicie o aplicativo
-ENTRYPOINT ["sh", "-c", "dotnet ef database update && dotnet DevicesApi.dll"]
+# Defina as permissões de execução para o script de entrada
+RUN chmod +x entrypoint.sh
 
+# Defina o script de entrada como o ponto de entrada do contêiner
+ENTRYPOINT ["./entrypoint.sh"]
