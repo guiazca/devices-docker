@@ -4,62 +4,50 @@ using Microsoft.OpenApi.Models;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using DevicesApi.Services;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Adicionando serviços ao contêiner.
-ConfigureServices(builder.Services, builder.Configuration);
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Configuração do CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+// Configuração do Hangfire
+builder.Services.AddHangfire(config =>
+    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+          .UseSimpleAssemblyNameTypeSerializer()
+          .UseDefaultTypeSerializer()
+          .UseMemoryStorage());
+builder.Services.AddHangfireServer();
+
+// Outros serviços
+builder.Services.AddScoped<PingService>();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Devices API", Version = "v1" });
+});
+
+// Adicionando serviço de logging
+builder.Services.AddLogging(config =>
+{
+    config.AddConsole();
+    config.AddDebug();
+});
 
 var app = builder.Build();
-
-// Configurando o pipeline de requisições HTTP.
-Configure(app, builder.Environment);
-
-app.Run();
-
-void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-{
-    // Configuração do banco de dados
-    services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-
-    // Configuração do CORS
-    services.AddCors(options =>
-    {
-        options.AddPolicy("AllowAllOrigins",
-            builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            });
-    });
-
-    // Configuração do Hangfire
-    services.AddHangfire(config =>
-        config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-              .UseSimpleAssemblyNameTypeSerializer()
-              .UseDefaultTypeSerializer()
-              .UseMemoryStorage());
-    services.AddHangfireServer();
-
-    // Outros serviços
-    services.AddScoped<PingService>();
-    services.AddControllers();
-    services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Devices API", Version = "v1" });
-    });
-
-    // Adicionando serviço de logging
-    services.AddLogging(config =>
-    {
-        config.AddConsole();
-        config.AddDebug();
-    });
-}
 
 // Método para aplicar migrações
 void ApplyMigrations(WebApplication app)
@@ -71,36 +59,34 @@ void ApplyMigrations(WebApplication app)
     }
 }
 
-
-void Configure(WebApplication app, IWebHostEnvironment env)
+// Configurando o pipeline de requisições HTTP.
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
-    var logger = app.Services.GetRequiredService<ILogger<Program>>();
-
-    // Configuração do ambiente
-    if (env.IsDevelopment() || env.IsProduction())
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
     {
-        app.UseDeveloperExceptionPage();
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Devices API v1");
-            c.RoutePrefix = string.Empty;
-        });
-    }
-
-    app.UseRouting();
-    app.UseHttpsRedirection();
-    app.UseCors("AllowAllOrigins");
-    app.UseHangfireDashboard();
-    app.MapHangfireDashboard();
-    app.MapControllers();
-
-    // Agendamento do job de ping
-    var serviceProvider = app.Services;
-    RecurringJob.AddOrUpdate(
-        "PingDevices",
-        () => PingJob.Execute(serviceProvider),
-        "0 2 * * 0"); // Às 2:00 da manhã todos os domingos
-
-    logger.LogInformation("Aplicação iniciada e configurada.");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Devices API v1");
+        c.RoutePrefix = string.Empty;
+    });
 }
+
+app.UseRouting();
+app.UseHttpsRedirection();
+app.UseCors("AllowAllOrigins");
+app.UseAuthorization();
+app.UseHangfireDashboard();
+app.MapHangfireDashboard();
+app.MapControllers();
+
+// Aplicar migrações antes de iniciar a aplicação
+ApplyMigrations(app);
+
+// Agendamento do job de ping
+var serviceProvider = app.Services;
+RecurringJob.AddOrUpdate(
+    "PingDevices",
+    () => PingJob.Execute(serviceProvider),
+    "0 2 * * 0"); // Às 2:00 da manhã todos os domingos
+
+app.Run();
