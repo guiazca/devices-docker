@@ -31,6 +31,14 @@ namespace DevicesApi.Migrations
                 nullable: false,
                 defaultValue: 0);
 
+            migrationBuilder.AddColumn<int>(
+                name: "CategoriaId",
+                table: "Dispositivos",
+                type: "integer",
+                nullable: false,
+                defaultValue: 0);
+
+
             migrationBuilder.AddColumn<string>(
                 name: "MacAddress",
                 table: "Dispositivos",
