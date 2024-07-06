@@ -10,11 +10,6 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release -o out
 
-# # Etapa 2: Aplicar Migrações
-# FROM build AS ef-migration
-# WORKDIR /app
-# RUN dotnet ef database update
-
 # Etapa 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
