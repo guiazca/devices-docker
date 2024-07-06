@@ -18,6 +18,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=devicesdb;Username=postgres;Password=postgres
+      - ASPNETCORE_URLS=http://+:5000
     depends_on:
       - db
 
@@ -27,6 +28,6 @@ services:
     ports:
       - "8080:80"
     environment:
-      - REACT_APP_API_URL=http://devicesapi:5000/api
+      - REACT_APP_API_BASE_URL=http://devicesapi:5000/api
     depends_on:
       - devicesapi

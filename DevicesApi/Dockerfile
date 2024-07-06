@@ -10,15 +10,18 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release -o out
 
-# Etapa 2: Aplicar Migrações
-FROM build AS ef-migration
-WORKDIR /app
-#RUN dotnet ef database update
+# # Etapa 2: Aplicar Migrações
+# FROM build AS ef-migration
+# WORKDIR /app
+# RUN dotnet ef database update
 
 # Etapa 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
+
+# Defina a variável de ambiente para a URL base
+ENV ASPNETCORE_URLS=http://+:5000
 
 # Defina o ponto de entrada do contêiner
 ENTRYPOINT ["dotnet", "DevicesApi.dll"]
