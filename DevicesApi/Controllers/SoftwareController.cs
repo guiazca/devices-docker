@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DevicesApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/softwares")]
     [ApiController]
     public class SoftwaresController : ControllerBase
     {

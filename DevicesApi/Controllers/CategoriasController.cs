@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DevicesApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categorias")]
     [ApiController]
     public class CategoriasController : ControllerBase
     {

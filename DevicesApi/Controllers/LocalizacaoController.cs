@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DevicesApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/localizacoes")]
     [ApiController]
     public class LocalizacoesController : ControllerBase
     {

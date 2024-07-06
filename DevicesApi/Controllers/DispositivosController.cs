@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace DevicesApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/dispositivos")]
     
     public class DispositivosController : ControllerBase
     {

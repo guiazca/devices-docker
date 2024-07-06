@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DevicesApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/modelos")]
     [ApiController]
     public class ModelosController : ControllerBase
     {
