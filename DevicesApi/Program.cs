@@ -67,7 +67,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Devices API v1");
-        c.RoutePrefix = string.Empty;
+        c.RoutePrefix = string.Empty; // Isso garante que o Swagger estará disponível na raiz
     });
 }
 
@@ -88,5 +88,16 @@ RecurringJob.AddOrUpdate(
     "PingDevices",
     () => PingJob.Execute(serviceProvider),
     "0 2 * * 0"); // Às 2:00 da manhã todos os domingos
+
+    app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/swagger");
+        return;
+    }
+    await next();
+});
+
 
 app.Run();
