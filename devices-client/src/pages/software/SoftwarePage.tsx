@@ -53,7 +53,7 @@ const SoftwarePage: React.FC = () => {
   };
   const exportData = async () => {
     try {
-      const response = await fetch(`${API_URL}/software/export`);
+      const response = await fetch(`${API_URL}/softwares/export`);
       const blob = await response.blob();
       saveAs(blob, `software_${new Date().toISOString()}.csv`);
     } catch (error) {
