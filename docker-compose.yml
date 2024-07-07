@@ -4,28 +4,30 @@ services:
   db:
     image: postgres
     environment:
+      POSTGRES_DB: devicesdb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: devicesdb
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
   devicesapi:
-    build: .
+    build:
+      context: ./DevicesApi
+    ports:
+      - "5000:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=devicesdb;Username=postgres;Password=postgres
       - ASPNETCORE_URLS=http://+:5000
-    ports:
-      - "5000:5000"
     depends_on:
       - db
 
   frontend:
-    build: ./frontend
-    environment:
-      - REACT_APP_API_BASE_URL=http://localhost:5000/api
+    build:
+      context: ./devices-client
     ports:
       - "8080:80"
+    environment:
+      - REACT_APP_API_BASE_URL=http://devicesapi:5000/api
     depends_on:
       - devicesapi
