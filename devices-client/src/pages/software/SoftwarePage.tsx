@@ -64,6 +64,7 @@ const SoftwarePage: React.FC = () => {
 
   return (
     <Box sx={{ flexGrow: 1, padding: 2 }}>
+       <Box sx={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 2 }}>
       <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ marginBottom: 2 }}>
         Cadastrar Software
       </Button>
@@ -71,6 +72,7 @@ const SoftwarePage: React.FC = () => {
           Exportar CSV
         </Button>
         <ImportCsv />
+      </Box>
       <SoftwareTable softwares={softwares} onEdit={handleEditSoftware} onDelete={handleDeleteSoftware} />
       <SoftwareModal open={isModalOpen} onClose={handleCloseModal} onSave={handleSaveSoftware} software={editingSoftware} />
     </Box>
