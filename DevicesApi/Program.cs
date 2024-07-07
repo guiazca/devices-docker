@@ -74,7 +74,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors("AllowAllOrigins");
-app.UseAuthorization();
+//app.UseAuthorization();
 app.UseHangfireDashboard();
 app.MapHangfireDashboard();
 app.MapControllers();
