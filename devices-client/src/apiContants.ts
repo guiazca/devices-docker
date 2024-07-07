@@ -1,5 +1,9 @@
 import axios from 'axios';
+import getLocalIp from './getLocalIp';
+
+export const API_URL = `http://${getLocalIp()}:5000/api`;
+console.log(API_URL);
 
 export const api = axios.create({
-    baseURL: 'http://192.168.0.100:5000/api',
+    baseURL: API_URL,
   });
