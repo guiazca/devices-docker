@@ -4,7 +4,7 @@ import SoftwareTable from './SoftwareTable';
 import SoftwareModal from './SoftwareModal';
 import { fetchSoftwares, createSoftware, updateSoftware, deleteSoftware } from './api';
 import { Software } from './types';
-import ImportCsv from './importCsv';
+import ImportCsv from './ImportCsv';
 import { API_URL } from '../../apiContants';
 import { saveAs } from 'file-saver'; // Biblioteca para salvar arquivos
 
