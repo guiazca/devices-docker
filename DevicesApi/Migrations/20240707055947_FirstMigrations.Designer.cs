@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevicesApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240615153048_UpdateDispositivo")]
-    partial class UpdateDispositivo
+    [Migration("20240707055947_FirstMigrations")]
+    partial class FirstMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,6 @@ namespace DevicesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -50,44 +49,43 @@ namespace DevicesApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Descricao")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("IP")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsOnline")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("LocalizacaoId")
                         .HasColumnType("integer");
 
                     b.Property<string>("MacAddress")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("MarcaId")
+                    b.Property<int>("ModeloId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Modelo")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("Porta")
                         .HasColumnType("integer");
 
                     b.Property<string>("URL")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoriaId");
+
                     b.HasIndex("LocalizacaoId");
 
-                    b.HasIndex("MarcaId");
+                    b.HasIndex("ModeloId");
 
                     b.ToTable("Dispositivos");
                 });
@@ -101,7 +99,6 @@ namespace DevicesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -118,7 +115,6 @@ namespace DevicesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -126,28 +122,96 @@ namespace DevicesApi.Migrations
                     b.ToTable("Marcas");
                 });
 
+            modelBuilder.Entity("DevicesApi.Models.Modelo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MarcaId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarcaId");
+
+                    b.ToTable("Modelos");
+                });
+
+            modelBuilder.Entity("DevicesApi.Models.Software", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DataUltimaAtualizacao")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("IP")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Porta")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("URL")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Softwares");
+                });
+
             modelBuilder.Entity("DevicesApi.Models.Dispositivo", b =>
                 {
+                    b.HasOne("DevicesApi.Models.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DevicesApi.Models.Localizacao", "Localizacao")
                         .WithMany()
                         .HasForeignKey("LocalizacaoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DevicesApi.Models.Marca", "Marca")
-                        .WithMany("Dispositivos")
-                        .HasForeignKey("MarcaId")
+                    b.HasOne("DevicesApi.Models.Modelo", "Modelo")
+                        .WithMany()
+                        .HasForeignKey("ModeloId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Categoria");
+
                     b.Navigation("Localizacao");
+
+                    b.Navigation("Modelo");
+                });
+
+            modelBuilder.Entity("DevicesApi.Models.Modelo", b =>
+                {
+                    b.HasOne("DevicesApi.Models.Marca", "Marca")
+                        .WithMany("Modelos")
+                        .HasForeignKey("MarcaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Marca");
                 });
 
             modelBuilder.Entity("DevicesApi.Models.Marca", b =>
                 {
-                    b.Navigation("Dispositivos");
+                    b.Navigation("Modelos");
                 });
 #pragma warning restore 612, 618
         }

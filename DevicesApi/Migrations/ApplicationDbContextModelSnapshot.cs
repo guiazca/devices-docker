@@ -31,7 +31,6 @@ namespace DevicesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -47,21 +46,23 @@ namespace DevicesApi.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Descricao")
                         .HasColumnType("text");
 
                     b.Property<string>("IP")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsOnline")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("LocalizacaoId")
                         .HasColumnType("integer");
 
                     b.Property<string>("MacAddress")
                         .HasColumnType("text");
-
-                    b.Property<int?>("MarcaId")
-                        .HasColumnType("integer");
 
                     b.Property<int>("ModeloId")
                         .HasColumnType("integer");
@@ -73,14 +74,13 @@ namespace DevicesApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("URL")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LocalizacaoId");
+                    b.HasIndex("CategoriaId");
 
-                    b.HasIndex("MarcaId");
+                    b.HasIndex("LocalizacaoId");
 
                     b.HasIndex("ModeloId");
 
@@ -96,7 +96,6 @@ namespace DevicesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -113,7 +112,6 @@ namespace DevicesApi.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -133,7 +131,6 @@ namespace DevicesApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -155,18 +152,15 @@ namespace DevicesApi.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IP")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("Porta")
                         .HasColumnType("integer");
 
                     b.Property<string>("URL")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -176,21 +170,25 @@ namespace DevicesApi.Migrations
 
             modelBuilder.Entity("DevicesApi.Models.Dispositivo", b =>
                 {
+                    b.HasOne("DevicesApi.Models.Categoria", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DevicesApi.Models.Localizacao", "Localizacao")
                         .WithMany()
                         .HasForeignKey("LocalizacaoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DevicesApi.Models.Marca", null)
-                        .WithMany("Dispositivos")
-                        .HasForeignKey("MarcaId");
-
                     b.HasOne("DevicesApi.Models.Modelo", "Modelo")
                         .WithMany()
                         .HasForeignKey("ModeloId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Categoria");
 
                     b.Navigation("Localizacao");
 
@@ -200,7 +198,7 @@ namespace DevicesApi.Migrations
             modelBuilder.Entity("DevicesApi.Models.Modelo", b =>
                 {
                     b.HasOne("DevicesApi.Models.Marca", "Marca")
-                        .WithMany()
+                        .WithMany("Modelos")
                         .HasForeignKey("MarcaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -210,7 +208,7 @@ namespace DevicesApi.Migrations
 
             modelBuilder.Entity("DevicesApi.Models.Marca", b =>
                 {
-                    b.Navigation("Dispositivos");
+                    b.Navigation("Modelos");
                 });
 #pragma warning restore 612, 618
         }
