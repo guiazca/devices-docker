@@ -26,7 +26,7 @@ services:
     build:
       context: ./devices-client
     ports:
-      - "8080:80"
+      - "8085:80"
     environment:
       - REACT_APP_API_BASE_URL=http://devicesapi:5000/api
     depends_on:
