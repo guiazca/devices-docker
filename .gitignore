@@ -1,0 +1,11 @@
+# Ignorar arquivos e diretórios gerais
+.DS_Store
+node_modules
+/dist
+
+# Ignorar subprojetos
+/devices-client/node_modules
+/devices-client/build
+/devices-client/dist
+/DevicesApi/bin
+/DevicesApi/obj
