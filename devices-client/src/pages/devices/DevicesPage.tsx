@@ -9,6 +9,7 @@ import { Brand, Device } from './types';
 import { fetchBrands } from '../brand/api';
 import { Location } from '../locations/types';
 import ImportCsv from './ImportCsv';
+import { API_URL } from '../../apiContants';
 
 const DevicesPage: React.FC = () => {
   const [devices, setDevices] = useState<Device[]>([]);
@@ -112,7 +113,7 @@ const DevicesPage: React.FC = () => {
 
   const exportData = async () => {
     try {
-      const response = await fetch('https://localhost:/api/Dispositivos/export');
+      const response = await fetch(`${API_URL}/Dispositivos/export`);
       const blob = await response.blob();
       saveAs(blob, `dispositivos_${new Date().toISOString()}.csv`);
     } catch (error) {
