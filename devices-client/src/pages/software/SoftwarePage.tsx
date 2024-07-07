@@ -4,6 +4,9 @@ import SoftwareTable from './SoftwareTable';
 import SoftwareModal from './SoftwareModal';
 import { fetchSoftwares, createSoftware, updateSoftware, deleteSoftware } from './api';
 import { Software } from './types';
+import ImportCsv from './importCsv';
+import { API_URL } from '../../apiContants';
+import { saveAs } from 'file-saver'; // Biblioteca para salvar arquivos
 
 const SoftwarePage: React.FC = () => {
   const [softwares, setSoftwares] = useState<Software[]>([]);
@@ -48,12 +51,26 @@ const SoftwarePage: React.FC = () => {
     await deleteSoftware(id);
     fetchData(); // Atualiza a lista após deletar
   };
+  const exportData = async () => {
+    try {
+      const response = await fetch(`${API_URL}/software/export`);
+      const blob = await response.blob();
+      saveAs(blob, `software_${new Date().toISOString()}.csv`);
+    } catch (error) {
+      console.error('Error exporting data:', error);
+    }
+  };
+
 
   return (
     <Box sx={{ flexGrow: 1, padding: 2 }}>
       <Button variant="contained" color="primary" onClick={handleOpenModal} sx={{ marginBottom: 2 }}>
         Cadastrar Software
       </Button>
+      <Button variant="contained" color="secondary" onClick={exportData}>
+          Exportar CSV
+        </Button>
+        <ImportCsv />
       <SoftwareTable softwares={softwares} onEdit={handleEditSoftware} onDelete={handleDeleteSoftware} />
       <SoftwareModal open={isModalOpen} onClose={handleCloseModal} onSave={handleSaveSoftware} software={editingSoftware} />
     </Box>

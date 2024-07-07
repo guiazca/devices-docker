@@ -4,6 +4,8 @@ using DevicesApi.Data;
 using DevicesApi.DTOs;
 using DevicesApi.Models;
 using Microsoft.AspNetCore.Authorization;
+using CsvHelper;
+using System.Globalization;
 
 namespace DevicesApi.Controllers
 {
@@ -120,6 +122,39 @@ namespace DevicesApi.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+                [HttpGet("export")]
+        public async Task<IActionResult> Export()
+        {
+            var softwares = await _context.Softwares.ToListAsync();
+
+            using (var memoryStream = new MemoryStream())
+            using (var streamWriter = new StreamWriter(memoryStream))
+            using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture))
+            {
+                csvWriter.WriteRecords(softwares);
+                streamWriter.Flush();
+                return File(memoryStream.ToArray(), "text/csv", "softwares.csv");
+            }
+        }
+
+        [HttpPost("import")]
+        public async Task<IActionResult> Import(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("File is empty");
+            }
+
+            using (var streamReader = new StreamReader(file.OpenReadStream()))
+            using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
+            {
+                var records = csvReader.GetRecords<Software>().ToList();
+                _context.Softwares.AddRange(records);
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok();
         }
     }
 }
