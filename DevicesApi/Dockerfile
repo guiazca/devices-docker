@@ -16,7 +16,7 @@ WORKDIR /app
 COPY --from=build /app/out .
 
 # Defina a variável de ambiente para a URL base
-ENV ASPNETCORE_URLS=http://+:5000
+ENV ASPNETCORE_URLS=http://+:5001
 
 # Defina o ponto de entrada do contêiner
 ENTRYPOINT ["dotnet", "DevicesApi.dll"]

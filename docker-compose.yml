@@ -9,18 +9,22 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5433:5432"
+    networks:
+      - app-network
 
   devicesapi:
     build:
       context: ./DevicesApi
     ports:
-      - "5000:5000"
+      - "5001:5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=devicesdb;Username=postgres;Password=postgres
-      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_URLS=http://+:5001
     depends_on:
       - db
+    networks:
+      - app-network
 
   frontend:
     build:
@@ -28,6 +32,12 @@ services:
     ports:
       - "8085:80"
     environment:
-      - REACT_APP_API_BASE_URL=http://devicesapi:5000/api
+      - REACT_APP_API_BASE_URL=http://app-network:5001/api
     depends_on:
       - devicesapi
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

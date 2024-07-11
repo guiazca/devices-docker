@@ -70,9 +70,13 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         c.RoutePrefix = string.Empty; // Isso garante que o Swagger estará disponível na raiz
     });
 }
-
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"Received request: {context.Request.Method} {context.Request.Path}");
+    await next();
+});
 app.UseRouting();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseCors("AllowAllOrigins");
 //app.UseAuthorization();
 app.UseHangfireDashboard();
