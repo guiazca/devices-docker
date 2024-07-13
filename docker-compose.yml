@@ -16,11 +16,11 @@ services:
     build:
       context: ./DevicesApi
     ports:
-      - "5001:5001"
+      - "5000:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=devicesdb;Username=postgres;Password=postgres
-      - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_URLS=http://+:5000
     depends_on:
       - db
     networks:
@@ -32,7 +32,7 @@ services:
     ports:
       - "8085:80"
     environment:
-      - REACT_APP_API_BASE_URL=http://app-network:5001/api
+      - REACT_APP_API_BASE_URL=http://app-network:5000/api
     depends_on:
       - devicesapi
     networks:
